@@ -7,8 +7,7 @@ public:
             freq[c-'a']++ ; 
         }
         sort( freq.rbegin() , freq.rend()) ; 
-        for( int i = 0 ; i< 26 ;  i++)cout<< freq[i] << " " ; 
-        cout<< endl ; 
+        
         int ans = 0 ; 
         int cnt = 0 ; 
         int mat =1 ; 
