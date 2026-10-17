@@ -11,26 +11,25 @@ public:
     int minSwaps(vector<int>& nums) {
         int n = nums.size() ;
 
-        vector<vector<int> > sums( n ) ; 
+        vector<vector<int> > v( n ) ; 
         
         for( int i = 0 ; i< n ; i++ ){
            int x = digit_sum( nums[i] ) ;
-           sums[i] = { x , nums[i]} ; 
+           v[i] = { x , nums[i], i } ; 
         }
-        sort( sums.begin() , sums.end() , []( const auto& a , const auto& b ){
-            if( a[0] != b[0] )return a[0] < b[0] ; 
-            else return a[1] < b[1] ; 
-        });
+        sort(v.begin(), v.end());
 
-        map<int,int> pos;
-        for (int i = 0; i < n; i++) pos[sums[i][1]] = i;
+        vector<bool> vis(n, false);
         int swaps = 0;
         for (int i = 0; i < n; i++) {
-            // jab tak i pe galat element hai, usse sahi jagah bhejo
-            while (pos[nums[i]] != i) {
-                swap(nums[i], nums[pos[nums[i]]]);
-                swaps++;
+            if (vis[i] || v[i][2] == i) continue;
+            int j = i, len = 0;
+            while (!vis[j]) {
+                vis[j] = true;
+                j = v[j][2];
+                len++;
             }
+            swaps += len - 1;
         }
         return swaps;
 
