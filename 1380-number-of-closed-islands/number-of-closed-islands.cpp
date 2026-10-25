@@ -1,49 +1,39 @@
 class Solution {
 public:
-    void dfs( int i , int j , vector<vector<int>> & vis , vector<vector<int>>& grid ){
-        int m = vis.size() ; 
-        int n = vis[0].size() ; 
-        vis[i][j] = 1 ; 
-        int dr[4] = { -1 , 0 , 1 , 0 } , dc[4] = { 0 , -1 , 0 , 1 } ; 
-        for( int k = 0 ; k < 4 ; k++){
-            int nr = i+ dr[k] ,  nc = j+ dc[k] ; 
-            if( nr >=0 && nr< m && nc>=0 && nc<n && !vis[nr][nc] && !grid[nr][nc] ){
-                dfs( nr , nc , vis , grid ); 
-            }
-        }
+    int m, n;
+
+    bool dfs(vector<vector<int>>& grid, int r, int c) {
+        if (r < 0 || c < 0 || r >= m || c >= n)
+            return false;
+
+        if (grid[r][c] == 1)
+            return true;
+
+        grid[r][c] = 1; // Mark as visited
+
+        bool up = dfs(grid, r - 1, c);
+        bool down = dfs(grid, r + 1, c);
+        bool left = dfs(grid, r, c - 1);
+        bool right = dfs(grid, r, c + 1);
+
+        return up && down && left && right;
     }
 
     int closedIsland(vector<vector<int>>& grid) {
-        int m = grid.size() ; 
-        int n = grid[0].size() ; 
-        vector<vector<int>> vis( m , vector<int>( n , 0 )) ; 
-        for( int i = 0 ; i< m ; i++){
-            if( !grid[i][0]  && ! vis[i][0] ){
-                dfs( i , 0 , vis , grid ) ; 
-            }
-            if( ! grid[i][n-1]  && !vis[i][n-1] ){
-                dfs( i , n-1 , vis , grid ) ; 
-            }
-        }
-        for( int j = 0 ; j < n ; j++){
-            if( ! grid[0][j] && !vis[0][j]  ){
-                dfs( 0 , j , vis , grid) ; 
-            }
-            if( !grid[m-1][j] && !vis[m-1][j] ){
-                dfs( m-1 , j , vis , grid ) ; 
-            }
-        }
-        int ans= 0 ; 
-        for( int i = 1 ; i< m ; i++){
-            for( int j = 1 ; j < n ; j++){
-                if( !grid[i][j] && ! vis[i][j]  ){
-                    dfs( i , j , vis , grid ) ; 
-                    ans++ ; 
+        m = grid.size();
+        n = grid[0].size();
+
+        int count = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    if (dfs(grid, i, j))
+                        count++;
                 }
             }
         }
-        return ans ; 
 
-        
+        return count;
     }
 };
